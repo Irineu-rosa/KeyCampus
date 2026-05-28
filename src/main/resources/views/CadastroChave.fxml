@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.KeyCampus.controller.ChaveController"
+      stylesheets="@/css/StyleCadastro.css"
+      styleClass="root"
+      prefWidth="460"
+      prefHeight="520"
+      minWidth="460"  maxWidth="460"
+      minHeight="520" maxHeight="520"
+      spacing="0">
+
+    <VBox styleClass="topbar">
+        <Label text="Nova Chave" fx:id="lblTitleNovaChave" styleClass="page-title"/>
+        <Label text="Preencha os dados para cadastrar a chave" styleClass="page-sub"/>
+    </VBox>
+
+    <VBox styleClass="content" VBox.vgrow="ALWAYS">
+        <VBox styleClass="card" spacing="14">
+
+            <VBox spacing="5">
+                <Label text="Número da chave *" styleClass="form-label"/>
+                <TextField fx:id="txtNumero"
+                           promptText="Ex: 001, A-12"
+                           styleClass="form-input"
+                           maxWidth="Infinity"/>
+            </VBox>
+
+            <VBox spacing="5">
+                <Label text="Tipo *" styleClass="form-label"/>
+                <ComboBox fx:id="cbTipo"
+                          styleClass="form-combo"
+                          maxWidth="Infinity"/>
+            </VBox>
+
+            <VBox spacing="5">
+                <Label text="Sala *" styleClass="form-label"/>
+                <ComboBox fx:id="cbSala"
+                          promptText="Selecione a sala"
+                          styleClass="form-combo"
+                          maxWidth="Infinity"/>
+            </VBox>
+
+            <VBox spacing="5">
+                <Label text="Status" styleClass="form-label"/>
+                <ComboBox fx:id="cbStatus"
+                          styleClass="form-combo"
+                          maxWidth="Infinity"/>
+            </VBox>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <CheckBox fx:id="chkAtiva"
+                          text="Chave ativa"
+                          selected="true"
+                          styleClass="form-check"/>
+            </HBox>
+
+            <Button text="Salvar Chave"
+                    onAction="#salvar"
+                    styleClass="btn-primary"
+                    maxWidth="Infinity"/>
+
+        </VBox>
+    </VBox>
+
+</VBox>

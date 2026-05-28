@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.KeyCampus.controller.AgendamentoController"
+      stylesheets="@/css/StyleCadastro.css"
+      styleClass="root"
+      prefWidth="460"
+      prefHeight="520"
+      minWidth="460"  maxWidth="460"
+      minHeight="520" maxHeight="520"
+      spacing="0">
+
+    <VBox styleClass="topbar">
+        <Label text="Novo Agendamento" fx:id="lblTitleNovoAgendamento" styleClass="page-title"/>
+        <Label text="Preencha os dados para cadastrar o agendamento" styleClass="page-sub"/>
+    </VBox>
+
+    <VBox styleClass="content" VBox.vgrow="ALWAYS">
+        <VBox styleClass="card" spacing="14">
+
+            <VBox spacing="5">
+                <Label text="Usuário *" styleClass="form-label"/>
+                <ComboBox fx:id="cbUsuario"
+                          promptText="Selecione o usuário"
+                          styleClass="form-combo"
+                          maxWidth="Infinity"/>
+            </VBox>
+
+            <VBox spacing="5">
+                <Label text="Sala *" styleClass="form-label"/>
+                <ComboBox fx:id="cbSala"
+                          promptText="Selecione a sala"
+                          styleClass="form-combo"
+                          maxWidth="Infinity"/>
+            </VBox>
+
+            <VBox spacing="5">
+                <Label text="Data *" styleClass="form-label"/>
+                <DatePicker fx:id="dpData"
+                            styleClass="form-input"
+                            maxWidth="Infinity"/>
+            </VBox>
+
+            <HBox spacing="12">
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Hora de início *" styleClass="form-label"/>
+                    <TextField fx:id="txtHoraInicio"
+                               promptText="Ex: 08:00"
+                               styleClass="form-input"
+                               maxWidth="Infinity"/>
+                </VBox>
+
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Hora de fim *" styleClass="form-label"/>
+                    <TextField fx:id="txtHoraFim"
+                               promptText="Ex: 10:00"
+                               styleClass="form-input"
+                               maxWidth="Infinity"/>
+                </VBox>
+            </HBox>
+
+            <Button text="Salvar Agendamento"
+                    onAction="#salvar"
+                    styleClass="btn-primary"
+                    maxWidth="Infinity"/>
+
+        </VBox>
+    </VBox>
+
+</VBox>

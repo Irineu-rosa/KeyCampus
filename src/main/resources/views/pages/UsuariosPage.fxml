@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.KeyCampus.controller.UsuarioController"
+      stylesheets="@/css/style.css"
+      styleClass="root"
+      prefWidth="-1" minWidth="-1" maxWidth="1.7976931348623157E308"
+      prefHeight="-1" minHeight="-1" maxHeight="1.7976931348623157E308"
+      spacing="0">
+
+    <HBox spacing="16" VBox.vgrow="ALWAYS"
+          style="-fx-padding: 16; -fx-alignment: TOP-LEFT;">
+
+        <VBox styleClass="card" HBox.hgrow="ALWAYS"
+              maxHeight="1.7976931348623157E308">
+
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label text="Usuários" styleClass="card-title" HBox.hgrow="ALWAYS"/>
+                <Button text="+ Novo Usuário" styleClass="card-action" onAction="#abrirCadastroUsuario"/>
+            </HBox>
+
+            <HBox style="-fx-background-color: #F1F5F9; -fx-background-radius: 8; -fx-padding: 8 12 8 12;"
+                  alignment="CENTER_LEFT">
+                <Label text="Nome" HBox.hgrow="ALWAYS" maxWidth="1.7976931348623157E308"
+                       style="-fx-text-fill: #64748B; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                <Label text="Matrícula" HBox.hgrow="ALWAYS" maxWidth="1.7976931348623157E308"
+                       style="-fx-text-fill: #64748B; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                <Label text="Tipo" HBox.hgrow="ALWAYS" maxWidth="1.7976931348623157E308"
+                       style="-fx-text-fill: #64748B; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                <Label text="Status" prefWidth="80"
+                       style="-fx-text-fill: #64748B; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                <Label text="Ações" prefWidth="75"
+                       style="-fx-text-fill: #64748B; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+            </HBox>
+
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                        hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                        styleClass="room-scroll"
+                        maxHeight="1.7976931348623157E308">
+                <VBox fx:id="listaUsuarios" styleClass="room-list" spacing="4"/>
+            </ScrollPane>
+
+        </VBox>
+
+    </HBox>
+
+</VBox>

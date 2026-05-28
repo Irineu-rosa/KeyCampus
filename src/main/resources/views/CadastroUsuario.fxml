@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.KeyCampus.controller.UsuarioController"
+      stylesheets="@/css/StyleCadastro.css"
+      styleClass="root"
+      prefWidth="460"
+      prefHeight="420"
+      minWidth="460"  maxWidth="460"
+      minHeight="420" maxHeight="420"
+      spacing="0">
+
+    <VBox styleClass="topbar">
+        <Label text="Novo Usuário" fx:id="lblTitleNovoUsuario" styleClass="page-title"/>
+        <Label text="Preencha os dados para cadastrar"   styleClass="page-sub"/>
+    </VBox>
+
+    <VBox styleClass="content" VBox.vgrow="ALWAYS">
+        <VBox styleClass="card" spacing="14">
+
+            <VBox spacing="5">
+                <Label text="Nome do usuário *" styleClass="form-label"/>
+                <TextField fx:id="txtNome"
+                           promptText="Ex: João"
+                           styleClass="form-input"
+                           maxWidth="Infinity"/>
+            </VBox>
+
+            <VBox spacing="5">
+                <Label text="Matricula" styleClass="form-label"/>
+                <TextField fx:id="txtMatricula"
+                           promptText="Ex: 10221200356"
+                           styleClass="form-input"
+                           maxWidth="Infinity"/>
+            </VBox>
+
+            <VBox spacing="5">
+                <Label text="Tipo" styleClass="form-label"/>
+                <ComboBox fx:id="cbTipo"
+                          styleClass="form-combo"
+                          maxWidth="Infinity"/>
+            </VBox>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+            <CheckBox fx:id="chkAtivo"
+                      text="Chave ativa"
+                      selected="true"
+                      styleClass="form-check"/>
+            </HBox>
+
+            <Button text="Salvar Usuário"
+                    onAction="#salvar"
+                    styleClass="btn-primary"
+                    maxWidth="Infinity"/>
+
+
+        </VBox>
+    </VBox>
+
+</VBox>

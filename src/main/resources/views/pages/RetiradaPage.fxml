@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.KeyCampus.controller.RetiradaController"
+      stylesheets="@/css/StyleRetiradaForm.css"
+      styleClass="root"
+      prefWidth="460"  minWidth="460"  maxWidth="460"
+      prefHeight="400" minHeight="400" maxHeight="400"
+      spacing="0">
+
+    <VBox styleClass="topbar">
+        <Label text="Retirada de Chaves"              styleClass="page-title"/>
+        <Label text="Selecione usuário, sala e chave" styleClass="page-sub"/>
+    </VBox>
+
+    <VBox styleClass="content" VBox.vgrow="ALWAYS">
+        <VBox styleClass="card" spacing="14">
+
+            <VBox spacing="5">
+                <Label text="Usuário" styleClass="form-label"/>
+                <ComboBox fx:id="cbUsuarios"
+                          styleClass="form-combo"
+                          maxWidth="Infinity"/>
+            </VBox>
+
+            <VBox spacing="5">
+                <Label text="Sala" styleClass="form-label"/>
+                <ComboBox fx:id="cbSalas"
+                          styleClass="form-combo"
+                          maxWidth="Infinity"/>
+            </VBox>
+
+            <VBox spacing="5">
+                <Label text="Chave disponível" styleClass="form-label"/>
+                <ComboBox fx:id="cbChaves"
+                          styleClass="form-combo"
+                          maxWidth="Infinity"/>
+            </VBox>
+
+            <Button text="Retirar Chave"
+                    onAction="#retirar"
+                    styleClass="btn-primary"
+                    maxWidth="Infinity"/>
+
+        </VBox>
+    </VBox>
+
+</VBox>

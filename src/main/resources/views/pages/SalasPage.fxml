@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.KeyCampus.controller.SalaController"
+      stylesheets="@/css/style.css"
+      styleClass="root"
+      prefWidth="-1" minWidth="-1" maxWidth="1.7976931348623157E308"
+      prefHeight="-1" minHeight="-1" maxHeight="1.7976931348623157E308"
+      spacing="0">
+
+    <HBox spacing="16" VBox.vgrow="ALWAYS"
+          style="-fx-padding: 16; -fx-alignment: TOP-LEFT;">
+
+        <VBox styleClass="card" HBox.hgrow="ALWAYS"
+              maxHeight="1.7976931348623157E308">
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label text="Salas" styleClass="card-title" HBox.hgrow="ALWAYS"/>
+                <Button text="+ Nova Sala" style="magin: 10px" onAction="#abrirCadastroSala" styleClass="card-action"/>
+            </HBox>
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                        hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                        styleClass="room-scroll"
+                        maxHeight="1.7976931348623157E308">
+                <VBox fx:id="listaSalas" styleClass="room-list" spacing="8"/>
+            </ScrollPane>
+        </VBox>
+
+    </HBox>
+
+</VBox>
