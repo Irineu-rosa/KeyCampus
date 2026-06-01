@@ -1,9 +1,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.shape.*?>
 
+<?import javafx.scene.shape.SVGPath?>
 <VBox
         xmlns:fx="http://javafx.com/fxml"
         fx:controller="com.KeyCampus.controller.DashboardController"
@@ -11,7 +9,7 @@
 
             <HBox styleClass="topbar" alignment="CENTER_LEFT">
                 <VBox HBox.hgrow="ALWAYS">
-                    <Label text="Dashboard"                      styleClass="page-title"/>
+                    <Label text="Dashboard" styleClass="page-title"/>
                     <Label fx:id="lblData" styleClass="page-sub"/>
                 </VBox>
             </HBox>
@@ -22,7 +20,9 @@
 
                     <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
                         <StackPane styleClass="stat-icon, si-blue">
-                            <Label text="🚪"/>
+                            <!-- Ícone: porta -->
+                            <SVGPath content="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v13h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1
+                                            0-1H3zm1 13h8V2H4zM9 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2" fill="blue"/>
                         </StackPane>
                         <Label fx:id="lblTotalSalas" styleClass="stat-val"/>
                         <Label text="Total de salas" styleClass="stat-lbl"/>
@@ -30,7 +30,11 @@
 
                     <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
                         <StackPane styleClass="stat-icon, si-green">
-                            <Label text="✓"/>
+
+                            <!-- Ícone: check -->
+                            <SVGPath content="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88
+                                            12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0
+                                            0 1 1.047 0l3.052 3.093 5.4-6.425z" fill="green"/>
                         </StackPane>
                         <Label fx:id="lblSalasLivres" styleClass="stat-val"/>
                         <Label text="Salas livres" styleClass="stat-lbl"/>
@@ -38,17 +42,27 @@
 
                     <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
                         <StackPane styleClass="stat-icon, si-coral">
-                            <Label text="⏱"/>
+
+                            <!-- Ícone: relogio -->
+                            <SVGPath content="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8
+                                            8.71z M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14
+                                            0" fill="red"/>
                         </StackPane>
-                        <Label fx:id="lblSalasEmUso"          styleClass="stat-val"/>
+                        <Label fx:id="lblSalasEmUso" styleClass="stat-val"/>
                         <Label text="Em uso agora" styleClass="stat-lbl"/>
                     </VBox>
 
                     <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
                         <StackPane styleClass="stat-icon, si-amber">
-                            <Label text="🔑"/>
+
+                            <!-- Ícone: chave -->
+                            <SVGPath content="M0 8a4 4 0 0 1 7.465-2H14a.5.5 0 0 1 .354.146l1.5 1.5a.5.5 0 0 1
+                                            0 .708l-1.5 1.5a.5.5 0 0 1-.708 0L13 9.207l-.646.647a.5.5 0 0 1-.708
+                                            0L11 9.207l-.646.647a.5.5 0 0 1-.708 0L9 9.207l-.5 1.5a.5.5 0 0
+                                            1-.465.345H7.465A4 4 0 0 1 0 8m5.5 1a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0
+                                            3" fill="orange"/>
                         </StackPane>
-                        <Label fx:id="lblChavesAtivas"         styleClass="stat-val"/>
+                        <Label fx:id="lblChavesAtivas" styleClass="stat-val"/>
                         <Label text="Chaves ativas" styleClass="stat-lbl"/>
                     </VBox>
 
@@ -59,7 +73,7 @@
                     <VBox styleClass="card" HBox.hgrow="ALWAYS">
                         <HBox alignment="CENTER_LEFT" spacing="12">
                             <Label text="Status das salas" styleClass="card-title" HBox.hgrow="ALWAYS"/>
-                            <Button text="+ Nova Sala" style="magin: 10px" onAction="#abrirCadastroSala" styleClass="card-action"/>
+                            <Button fx:id="btnNovaSala" text="+ Nova Sala" style="magin: 10px" onAction="#abrirCadastroSala" styleClass="card-action"/>
                         </HBox>
                         <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
                                     hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
@@ -70,10 +84,10 @@
                         </ScrollPane>
                     </VBox>
 
-                    <VBox styleClass="card" HBox.hgrow="ALWAYS">
-                        <HBox alignment="CENTER_LEFT">
+                    <VBox fx:id="boxAgendamentos" styleClass="card" HBox.hgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT" spacing="12">
                             <Label text="Próximos agendamentos" styleClass="card-title" HBox.hgrow="ALWAYS"/>
-                            <Label text="Novo +"               styleClass="card-action"/>
+                            <Button fx:id="btnAgendamentos" text="+ Novo Agendamento" style="magin: 10px" onAction="#abrirCadastroAgendamento" styleClass="card-action"/>
                         </HBox>
 
                         <VBox fx:id="listaAgendamento" styleClass="sched-list" spacing="8">

@@ -64,11 +64,8 @@ public class AgendamentoService {
             PreparedStatement stmt = conn.prepareStatement(sql)
         ){
             stmt.setLong(1, salaId);
-
             stmt.setString(2, data);
-
             stmt.setString(3, horaInicio);
-
             stmt.setString(4, horaFim);
 
             var rs = stmt.executeQuery();

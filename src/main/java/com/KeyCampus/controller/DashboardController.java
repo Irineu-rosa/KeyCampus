@@ -6,6 +6,9 @@ import com.KeyCampus.dao.SalaDao;
 import com.KeyCampus.model.Agendamento;
 import com.KeyCampus.model.Sala;
 
+import com.KeyCampus.model.TipoUsuario;
+import com.KeyCampus.model.Usuario;
+import com.KeyCampus.session.SessaoUsuario;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
@@ -24,34 +27,35 @@ import javafx.stage.Stage;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class DashboardController {
 
-    @FXML
-    private Label lblData;
-    @FXML
-    private Label lblTotalSalas;
-    @FXML
-    private Label lblSalasLivres;
-    @FXML
-    private Label lblSalasEmUso;
-    @FXML
-    private Label lblChavesAtivas;
-    @FXML
-    private VBox listaSalas;
-    @FXML
-    private VBox listaAgendamento;
+    @FXML private Label lblData;
+    @FXML private Label lblTotalSalas;
+    @FXML private Label lblSalasLivres;
+    @FXML private Label lblSalasEmUso;
+    @FXML private Label lblChavesAtivas;
+    @FXML private VBox listaSalas;
+    @FXML private VBox listaAgendamento;
+    @FXML private Button btnNovaSala;
+    @FXML private Button btnAgendamentos;
+    @FXML private VBox boxAgendamentos;
 
     private SalaDao salaDao = new SalaDao();
     private ChaveDao chaveDao = new ChaveDao();
     private AgendamentoDao agendamentoDao = new AgendamentoDao();
+
     private Stage cadastroSalaStage;
+    private Stage cadastroAgendamentoStage;
     private Stage salaStage;
 
     @FXML
     public void initialize(){
+        Usuario usuario = SessaoUsuario.get();
+        prepararinterface(usuario);
         carregarInformacoes();
     }
 
@@ -62,11 +66,22 @@ public class DashboardController {
         carregarAgendamentos();
     }
 
+    public void prepararinterface(Usuario usuario) {
+        if (usuario.getTipo() != TipoUsuario.ADMIN) {
+            btnNovaSala.setVisible(false);
+            btnNovaSala.setManaged(false);
+        }
+        if (usuario.getTipo() == TipoUsuario.LIMPEZA){
+            btnAgendamentos.setVisible(false);
+            btnAgendamentos.setManaged(false);
+            boxAgendamentos.setVisible(false);
+            boxAgendamentos.setManaged(false);
+        }
+    }
+
     private void carregarData(){
-        DateTimeFormatter formatter=
-                DateTimeFormatter.ofPattern(
-                        "EEEE, dd 'de' MMMM 'de' yyyy",
-                        new Locale("pt","BR"));
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ofPattern("EEEE, dd 'de' MMMM 'de' yyyy", new Locale("pt","BR"));
         lblData.setText(LocalDate.now().format(formatter));
     }
 
@@ -86,10 +101,16 @@ public class DashboardController {
     }
 
     private void carregarAgendamentos() {
-        listaAgendamento.getChildren().clear();
+        List<Agendamento> lista = new ArrayList<>();;
 
-        List<Agendamento> lista = agendamentoDao.listarObjetos();
-        System.out.println("Total agendamentos: " + lista.size()); // <-- verifica aqui
+        listaAgendamento.getChildren().clear();
+        Usuario usuario = SessaoUsuario.get();
+
+        if(usuario.getTipo() == TipoUsuario.ADMIN){
+            lista = agendamentoDao.listarObjetos();
+        } else if (usuario.getTipo() == TipoUsuario.PALESTRANTE) {
+            lista = agendamentoDao.buscarPorUsuario(usuario.getId());
+        }
 
         for (Agendamento agendamento : lista) {
             HBox linha = criarLinhaAgendamento(agendamento);
@@ -97,54 +118,45 @@ public class DashboardController {
         }
     }
 
-    private HBox criarLinhaSala(
-            Sala sala
-    ){
+    private HBox criarLinhaSala(Sala sala) {
+        Usuario usuario = SessaoUsuario.get();
+
         Circle status = new Circle(4);
-
-        switch(sala.getStatus()){
-            case DISPONIVEL:
-                status.getStyleClass().add("dot-free");
-                break;
-
-            case EM_USO:
-                status.getStyleClass().add("dot-busy");
-                break;
-
-            case EM_LIMPEZA:
-                status.getStyleClass().add("dot-clean");
-                break;
-        }
-
-
+        status.getStyleClass().add(switch (sala.getStatus()) {
+            case DISPONIVEL -> "dot-free";
+            case EM_USO -> "dot-busy";
+            case EM_LIMPEZA -> "dot-clean";
+        });
 
         Label nome = new Label(sala.getNome());
         nome.getStyleClass().add("room-name");
+
         Label tag = new Label(sala.getStatus().name());
         tag.getStyleClass().add("room-tag");
-        switch (sala.getStatus()) {
-            case DISPONIVEL -> tag.setStyle("-fx-background-color: #DCFCE7; -fx-text-fill: #166534; -fx-background-radius: 6; -fx-padding: 2 8 2 8;");
-            case EM_USO     -> tag.setStyle("-fx-background-color: #FEE2E2; -fx-text-fill: #991B1B; -fx-background-radius: 6; -fx-padding: 2 8 2 8;");
-            case EM_LIMPEZA -> tag.setStyle("-fx-background-color: #FEF9C3; -fx-text-fill: #854D0E; -fx-background-radius: 6; -fx-padding: 2 8 2 8;");
-        }
+        tag.setStyle(switch (sala.getStatus()) {
+            case DISPONIVEL -> "-fx-background-color: #DCFCE7; -fx-text-fill: #166534;";
+            case EM_USO -> "-fx-background-color: #FEE2E2; -fx-text-fill: #991B1B;";
+            case EM_LIMPEZA -> "-fx-background-color: #FEF9C3; -fx-text-fill: #854D0E;";
+        } + " -fx-background-radius: 6; -fx-padding: 2 8 2 8;");
+
         Region espaco = new Region();
         HBox.setHgrow(espaco, Priority.ALWAYS);
-        Button btnEditar = new Button("✏");
-        Button btnExcluir = new Button("🗑");
-        btnEditar.getStyleClass().add("btn-edit");
-        btnExcluir.getStyleClass().add("btn-delete");
-        btnEditar.setOnAction(e -> {
-            editarSala(sala);
-        });
-        btnExcluir.setOnAction(e -> {
-            excluirSala(sala);
-        });
-        HBox acoes = new HBox(8, btnEditar, btnExcluir);
-        HBox linha = new HBox(10, status, nome, espaco, tag, acoes);
+
+        HBox linha = new HBox(10, status, nome, espaco, tag);
         linha.getStyleClass().add("room-row");
+
+        if (usuario.getTipo() == TipoUsuario.ADMIN) {
+            Button btnEditar = new Button("✏");
+            Button btnExcluir = new Button("🗑");
+            btnEditar .getStyleClass().add("btn-edit");
+            btnExcluir.getStyleClass().add("btn-delete");
+            btnEditar .setOnAction(e -> editarSala(sala));
+            btnExcluir.setOnAction(e -> excluirSala(sala));
+            linha.getChildren().add(new HBox(8, btnEditar, btnExcluir));
+        }
+
         return linha;
     }
-
 
     private HBox criarLinhaAgendamento(
             Agendamento agendamento
@@ -250,6 +262,36 @@ public class DashboardController {
                 salaStage = null;
             });
             salaStage.showAndWait();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void abrirCadastroAgendamento() {
+        try {
+            if (cadastroAgendamentoStage != null && cadastroAgendamentoStage.isShowing()) {
+                cadastroAgendamentoStage.toFront();
+                cadastroAgendamentoStage.requestFocus();
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/views/CadastroAgendamento.fxml")
+            );
+
+            cadastroAgendamentoStage = new Stage();
+            cadastroAgendamentoStage.setScene(new Scene(loader.load()));
+            cadastroAgendamentoStage.setTitle("Novo Agendamento");
+            cadastroAgendamentoStage.setResizable(false);
+            cadastroAgendamentoStage.initModality(Modality.APPLICATION_MODAL);
+            //cadastroAgendamentoStage.initOwner(listaAgendamentos.getScene().getWindow());
+            cadastroAgendamentoStage.setOnHidden(event -> {
+                carregarInformacoes();
+                cadastroAgendamentoStage = null;
+            });
+            cadastroAgendamentoStage.showAndWait();
 
         } catch (Exception e) {
             e.printStackTrace();

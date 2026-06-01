@@ -1,58 +1,63 @@
 package com.KeyCampus.model;
 
-import javafx.fxml.FXML;
+public class Usuario {
 
-public class Usuario{
     private Long id;
     private String nome;
     private String matricula;
+    private String senhaHash;
     private TipoUsuario tipo;
     private boolean ativo;
+    private boolean primeiroAcesso;
 
-    @Override
-    public String toString(){
-      return nome;
-    }
-
-    public Usuario (){
+    public Usuario() {
     }
 
     public Usuario(
             String nome,
             String matricula,
             TipoUsuario tipo
-    ){
-        this.nome=nome;
-        this.matricula=matricula;
-        this.tipo=tipo;
-        this.ativo=true;
+    ) {
+        this.nome = nome;
+        this.matricula = matricula;
+        this.tipo = tipo;
+        this.ativo = true;
+        this.primeiroAcesso = true;
     }
 
-    public Long getId(){
+    public Long getId() {
         return id;
     }
 
-    public void setId(Long id){
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getNome(){
+    public String getNome() {
         return nome;
     }
 
-    public void setNome(String nome){
+    public void setNome(String nome) {
         this.nome = nome;
     }
 
-    public String getMatricula(){
+    public String getMatricula() {
         return matricula;
     }
 
-    public void setMatricula(String matricula){
+    public void setMatricula(String matricula) {
         this.matricula = matricula;
     }
 
-    public TipoUsuario getTipo(){
+    public String getSenhaHash() {
+        return senhaHash;
+    }
+
+    public void setSenhaHash(String senhaHash) {
+        this.senhaHash = senhaHash;
+    }
+
+    public TipoUsuario getTipo() {
         return tipo;
     }
 
@@ -66,5 +71,18 @@ public class Usuario{
 
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
+    }
+
+    public boolean isPrimeiroAcesso() {
+        return primeiroAcesso;
+    }
+
+    public void setPrimeiroAcesso(boolean primeiroAcesso) {
+        this.primeiroAcesso = primeiroAcesso;
+    }
+
+    @Override
+    public String toString() {
+        return nome;
     }
 }

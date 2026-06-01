@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.KeyCampus.controller.LoginController"
+      stylesheets="@/css/StyleAuth.css"
+      styleClass="root"
+      prefWidth="420" minWidth="420" maxWidth="420"
+      prefHeight="480" minHeight="480" maxHeight="480"
+      spacing="0">
+
+    <VBox styleClass="topbar">
+        <Label text="KeyCampus"          styleClass="brand"/>
+        <Label text="Acesse sua conta"   styleClass="page-sub"/>
+    </VBox>
+
+    <VBox styleClass="content" VBox.vgrow="ALWAYS">
+        <VBox styleClass="card" spacing="16">
+
+            <VBox spacing="5">
+                <Label text="Nome completo" styleClass="form-label"/>
+                <TextField fx:id="tfNome"
+                           promptText="Ex: João Silva"
+                           styleClass="form-input"
+
+                           text=""
+                           
+                           maxWidth="Infinity"/>
+            </VBox>
+
+            <VBox spacing="5">
+                <Label text="Matrícula" styleClass="form-label"/>
+                <TextField fx:id="tfMatricula"
+                           promptText="Ex: 2024001"
+                           styleClass="form-input"
+
+                           text=""
+
+                           maxWidth="Infinity"/>
+            </VBox>
+
+            <VBox spacing="5">
+                <Label text="Senha" styleClass="form-label"/>
+                <PasswordField fx:id="pfSenha"
+                               promptText="Deixe em branco no primeiro acesso"
+
+                               text=""
+
+                               styleClass="form-input"
+                               maxWidth="Infinity"/>
+            </VBox>
+
+            <Region prefHeight="4"/>
+
+            <Button text="Entrar"
+                    onAction="#entrar"
+                    styleClass="btn-primary"
+                    maxWidth="Infinity"
+                    defaultButton="true"/>
+
+        </VBox>
+    </VBox>
+
+</VBox>

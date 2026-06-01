@@ -52,18 +52,8 @@ public class ChaveDao {
             var rs = stmt.executeQuery();
 
             while (rs.next()) {
-                Chave chave = new Chave();
-                chave.setId(rs.getLong("id"));
-                chave.setNumero(rs.getString("numero"));
-                chave.setTipo(TipoChave.valueOf(rs.getString("tipo")));
-                chave.setAtiva(rs.getBoolean("ativa"));
-                chave.setStatus(StatusChave.valueOf(rs.getString("status")));
-
-                Sala sala = new Sala();
-                sala.setId(rs.getLong("sala_id"));
-                sala.setNome(rs.getString("sala_nome"));
-
-                chave.setSala(sala);
+                Chave chave = mapear(rs);
+                chave.getSala().setNome(rs.getString("sala_nome"));
 
                 chaves.add(chave);
             }
@@ -92,18 +82,7 @@ public class ChaveDao {
             stmt.setLong(1, id);
             var rs = stmt.executeQuery();
 
-            if(rs.next()){
-                Chave chave = new Chave();
-                chave.setId(rs.getLong("id"));
-                chave.setNumero(rs.getString("numero"));
-                chave.setTipo(TipoChave.valueOf(rs.getString("tipo")));
-                chave.setAtiva(rs.getBoolean("ativa"));
-                chave.setStatus(StatusChave.valueOf(rs.getString("status")));
-                Sala sala = new Sala();
-                sala.setId(rs.getLong("sala_id"));
-                chave.setSala(sala);
-                return chave;
-            }
+            if (rs.next()) return mapear(rs);
         }
         catch(Exception e){
         throw new RuntimeException(e);
@@ -195,5 +174,60 @@ public class ChaveDao {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Chave> listarDisponiveisPorTipo(TipoChave tipo) {
+        String sql = """
+                SELECT * FROM chaves
+                WHERE status = 'DISPONIVEL'
+                AND tipo   = ?
+            """;
+
+        List<Chave> lista = new ArrayList<>();
+        try (
+                Connection conn = ConnectionFactory.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
+            stmt.setString(1, tipo.name());
+            var rs = stmt.executeQuery();
+            while (rs.next()) {
+                lista.add(mapear(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
+    public List<Chave> listarDisponiveis() {
+        String sql = "SELECT * FROM chaves WHERE status = 'DISPONIVEL'";
+        List<Chave> lista = new ArrayList<>();
+        try (
+                Connection conn = ConnectionFactory.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
+            var rs = stmt.executeQuery();
+            while (rs.next()) {
+                lista.add(mapear(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
+    private Chave mapear(java.sql.ResultSet rs) throws java.sql.SQLException {
+        Chave chave = new Chave();
+        chave.setId(rs.getLong("id"));
+        chave.setNumero(rs.getString("numero"));
+        chave.setTipo(TipoChave.valueOf(rs.getString("tipo")));
+        chave.setAtiva(rs.getBoolean("ativa"));
+        chave.setStatus(StatusChave.valueOf(rs.getString("status")));
+
+        Sala sala = new Sala();
+        sala.setId(rs.getLong("sala_id"));
+        chave.setSala(sala);
+
+        return chave;
     }
 }

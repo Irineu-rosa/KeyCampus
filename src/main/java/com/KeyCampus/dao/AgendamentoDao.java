@@ -5,190 +5,197 @@ import com.KeyCampus.model.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class AgendamentoDao {
 
-    public List<Agendamento> listarObjetos() {
-        List<Agendamento> agendamentos = new ArrayList<>();
+    private void prepararParams(PreparedStatement stmt, Object... params) throws Exception {
+        for (int i = 0; i < params.length; i++) {
+            stmt.setObject(i + 1, params[i]);
+        }
+    }
 
-        String sql =
-                """
-                SELECT a.*,
-                       u.nome usuario_nome,
-                       s.nome sala_nome
-                FROM agendamentos a
-                LEFT JOIN usuarios u ON u.id = a.usuario_id
-                LEFT JOIN salas    s ON s.id = a.sala_id
-                """;
-
+    private <T> List<T> executarLeitura(String sql, Function<ResultSet, T> mapper, Object... params) {
+        List<T> resultado = new ArrayList<>();
         try (
                 Connection conn = ConnectionFactory.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
-            var rs = stmt.executeQuery();
-
+            prepararParams(stmt, params);
+            ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                Agendamento agendamento = new Agendamento();
-                agendamento.setId(rs.getLong("id"));
-                agendamento.setData(LocalDate.parse(rs.getString("data")));
-                agendamento.setHoraInicio(LocalTime.parse(rs.getString("hora_inicio")));
-                agendamento.setHoraFim(LocalTime.parse(rs.getString("hora_fim")));
-
-                Usuario usuario = new Usuario();
-                usuario.setId(rs.getLong("usuario_id"));
-                usuario.setNome(rs.getString("usuario_nome"));
-                agendamento.setUsuario(usuario);
-
-                Sala sala = new Sala();
-                sala.setId(rs.getLong("sala_id"));
-                sala.setNome(rs.getString("sala_nome"));
-                agendamento.setSala(sala);
-
-                agendamentos.add(agendamento);
+                resultado.add(mapper.apply(rs));
             }
-
         } catch (Exception e) {
             System.out.println("ERRO: " + e.getMessage());
             e.printStackTrace();
         }
-
-        return agendamentos;
+        return resultado;
     }
 
-    public Agendamento buscarPorId(Long id) {
-        String sql =
-                """
-                SELECT a.*,
-                       u.nome usuario_nome,
-                       s.nome sala_nome
-                FROM agendamentos a
-                LEFT JOIN usuarios u ON u.id = a.usuario_id
-                LEFT JOIN salas    s ON s.id = a.sala_id
-                WHERE a.id = ?
-                """;
-
+    private void executarEscrita(String sql, Object... params) {
         try (
                 Connection conn = ConnectionFactory.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
-            stmt.setLong(1, id);
-            var rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                Agendamento agendamento = new Agendamento();
-                agendamento.setId(rs.getLong("id"));
-                agendamento.setData(LocalDate.parse(rs.getString("data")));
-                agendamento.setHoraInicio(LocalTime.parse(rs.getString("hora_inicio")));
-                agendamento.setHoraFim(LocalTime.parse(rs.getString("hora_fim")));
-
-                Usuario usuario = new Usuario();
-                usuario.setId(rs.getLong("usuario_id"));
-                usuario.setNome(rs.getString("usuario_nome"));
-                agendamento.setUsuario(usuario);
-
-                Sala sala = new Sala();
-                sala.setId(rs.getLong("sala_id"));
-                sala.setNome(rs.getString("sala_nome"));
-                agendamento.setSala(sala);
-
-                return agendamento;
-            }
-
+            prepararParams(stmt, params);
+            stmt.executeUpdate();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao executar operação no banco: " + e.getMessage(), e);
         }
+    }
 
-        return null;
+    private Agendamento mapearAgendamento(ResultSet rs) {
+        try {
+            Agendamento agendamento = new Agendamento();
+            agendamento.setId(rs.getLong("id"));
+            agendamento.setData(LocalDate.parse(rs.getString("data")));
+            agendamento.setHoraInicio(LocalTime.parse(rs.getString("hora_inicio")));
+            agendamento.setHoraFim(LocalTime.parse(rs.getString("hora_fim")));
+
+            Usuario usuario = new Usuario();
+            usuario.setId(rs.getLong("usuario_id"));
+            usuario.setNome(rs.getString("usuario_nome"));
+            agendamento.setUsuario(usuario);
+
+            Sala sala = new Sala();
+            sala.setId(rs.getLong("sala_id"));
+            sala.setNome(rs.getString("sala_nome"));
+            agendamento.setSala(sala);
+
+            return agendamento;
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao mapear agendamento: " + e.getMessage(), e);
+        }
+    }
+
+    private Sala mapearSala(ResultSet rs) {
+        try {
+            Sala sala = new Sala();
+            sala.setId(rs.getLong("id"));
+            sala.setNome(rs.getString("nome"));
+            return sala;
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao mapear sala: " + e.getMessage(), e);
+        }
+    }
+
+    private String[] janelaDeTempoAtual() {
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("HH:mm");
+        LocalDateTime agora = LocalDateTime.now();
+        return new String[]{
+                agora.format(fmt),
+                agora.plusMinutes(10).format(fmt)
+        };
+    }
+
+    // SQL base
+    private static final String SQL_SELECT_AGENDAMENTOS = """
+            SELECT a.*,
+                   u.nome usuario_nome,
+                   s.nome sala_nome
+            FROM agendamentos a
+            LEFT JOIN usuarios u ON u.id = a.usuario_id
+            LEFT JOIN salas  s ON s.id = a.sala_id
+            """;
+
+    public List<Agendamento> listarObjetos() {
+        return executarLeitura(SQL_SELECT_AGENDAMENTOS, this::mapearAgendamento);
+    }
+
+    public List<Agendamento> buscarPorUsuario(Long id) {
+        return executarLeitura(SQL_SELECT_AGENDAMENTOS + "WHERE a.usuario_id = ?", this::mapearAgendamento, id);
     }
 
     public int totalAgendamentosHoje() {
-        String sql =
-                """
-                SELECT COUNT(*) total
-                FROM agendamentos
-                WHERE data = CURRENT_DATE
-                """;
-
+        String sql = "SELECT COUNT(*) total FROM agendamentos WHERE data = CURRENT_DATE";
         try (
                 Connection conn = ConnectionFactory.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
-            var rs = stmt.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("total");
-            }
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) return rs.getInt("total");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return 0;
     }
 
     public void salvar(Agendamento agendamento) {
-        String sql =
-                """
+        executarEscrita("""
                 INSERT INTO agendamentos (usuario_id, sala_id, data, hora_inicio, hora_fim)
-                VALUES (?, ?, ?, ?, ?);
-                """;
-
-        try (
-                Connection conn = ConnectionFactory.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql)
-        ) {
-            stmt.setLong  (1, agendamento.getUsuario().getId());
-            stmt.setLong  (2, agendamento.getSala().getId());
-            stmt.setString(3, agendamento.getData().toString());        // "yyyy-MM-dd"
-            stmt.setString(4, agendamento.getHoraInicio().toString());  // "HH:mm:ss"
-            stmt.setString(5, agendamento.getHoraFim().toString());     // "HH:mm:ss"
-
-            stmt.execute();
-            System.out.println("Agendamento salvo!");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                VALUES (?, ?, ?, ?, ?)
+                """,
+                agendamento.getUsuario().getId(),
+                agendamento.getSala().getId(),
+                agendamento.getData().toString(),
+                agendamento.getHoraInicio().toString(),
+                agendamento.getHoraFim().toString()
+        );
+        System.out.println("Agendamento salvo!");
     }
 
     public void atualizar(Agendamento agendamento) {
-        String sql =
-                """
+        executarEscrita("""
                 UPDATE agendamentos
                 SET usuario_id = ?, sala_id = ?, data = ?, hora_inicio = ?, hora_fim = ?
-                WHERE id = ?;
-                """;
-
-        try (
-                Connection conn = ConnectionFactory.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql)
-        ) {
-            stmt.setLong  (1, agendamento.getUsuario().getId());
-            stmt.setLong  (2, agendamento.getSala().getId());
-            stmt.setString(3, agendamento.getData().toString());
-            stmt.setString(4, agendamento.getHoraInicio().toString());
-            stmt.setString(5, agendamento.getHoraFim().toString());
-            stmt.setLong  (6, agendamento.getId());
-
-            stmt.execute();
-            System.out.println("Agendamento atualizado!");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                WHERE id = ?
+                """,
+                agendamento.getUsuario().getId(),
+                agendamento.getSala().getId(),
+                agendamento.getData().toString(),
+                agendamento.getHoraInicio().toString(),
+                agendamento.getHoraFim().toString(),
+                agendamento.getId()
+        );
+        System.out.println("Agendamento atualizado!");
     }
 
     public void excluir(Long id) {
-        String sql = "DELETE FROM agendamentos WHERE id = ?";
+        executarEscrita("DELETE FROM agendamentos WHERE id = ?", id);
+    }
 
+    public List<Sala> salasDisponiveisParaPalestrante(Long usuarioId) {
+        String[] janela = janelaDeTempoAtual();
+        return executarLeitura("""
+                SELECT s.id, s.nome, s.status
+                FROM agendamentos a
+                JOIN salas s ON s.id = a.sala_id
+                WHERE a.usuario_id = ?
+                  AND a.hora_inicio <= ?
+                  AND a.hora_fim > ?
+                """,
+                this::mapearSala,
+                usuarioId, janela[1], janela[0]
+        );
+    }
+
+    public boolean usuarioPossuiAgendamentoAtivo(Long usuarioId, Long salaId) {
+        String[] janela = janelaDeTempoAtual();
+        String sql = """
+                SELECT 1 FROM agendamentos
+                WHERE usuario_id = ?
+                  AND sala_id = ?
+                  AND hora_inicio <= ?
+                  AND hora_fim > ?
+                """;
         try (
                 Connection conn = ConnectionFactory.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
-            stmt.setLong(1, id);
-            stmt.executeUpdate();
+            prepararParams(stmt, usuarioId, salaId, janela[1], janela[0]);
+            return stmt.executeQuery().next();
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 }

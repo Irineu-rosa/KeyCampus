@@ -41,11 +41,10 @@ public class SalaController {
 
     @FXML
     public void initialize() {
-        // Só carrega a tabela se estiver na tela de listagem
         if (listaSalas != null) {
             carregarInformacoes();
         }
-        // Se estiver no CadastroSala, popula o ComboBox
+
         if (cbStatus != null) {
             cbStatus.getItems().addAll(StatusSala.values());
         }
@@ -151,11 +150,8 @@ public class SalaController {
         btnExcluir.setOnAction(e -> excluirSala(sala));
 
         HBox acoes = new HBox(8, btnEditar, btnExcluir);
-
-        // Linha principal
         HBox linha = new HBox(10, status, nome, espaco, tag, acoes);
 
-        // descrição abaixo
         Label descricao = new Label("Descrição: " + (sala.getDescricao().isEmpty()? "Sem descricao" :  sala.getDescricao()));
         descricao.setWrapText(true);
         descricao.setStyle("-fx-text-fill:#94A3B8;" +

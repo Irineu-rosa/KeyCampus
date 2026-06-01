@@ -8,6 +8,7 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.KeyCampus.controller.MainController"
+            stylesheets="@/css/style.css"
             styleClass="root"
             prefWidth="1000" prefHeight="640">
 
@@ -25,30 +26,34 @@
 
             <VBox styleClass="nav" VBox.vgrow="ALWAYS">
                 <Label text="MENU" styleClass="nav-label"/>
-                <Button text="  Dashboard" styleClass="nav-item" maxWidth="Infinity" fx:id="btnDashboard" onAction="#navegar"/>
-                <Button text="  Salas"        styleClass="nav-item" maxWidth="Infinity" fx:id="btnSalas"        onAction="#navegar"/>
-                <Button text="  Chaves"       styleClass="nav-item" maxWidth="Infinity" fx:id="btnChaves"       onAction="#navegar"/>
-                <Button text="  Usuários"     styleClass="nav-item" maxWidth="Infinity" fx:id="btnUsuarios"     onAction="#navegar"/>
-                <Button text="  Agendamentos" styleClass="nav-item" maxWidth="Infinity" fx:id="btnAgendamentos" onAction="#navegar"/>
-                <Button text="  Retirada"     styleClass="nav-item" maxWidth="Infinity" fx:id="btnRetirar"      onAction="#navegar"/>
+                <Button text=" Dashboard" styleClass="nav-item" maxWidth="Infinity" fx:id="btnDashboard" onAction="#navegar"/>
+                <Button text=" Salas" styleClass="nav-item" maxWidth="Infinity" fx:id="btnSalas" onAction="#navegar"/>
+                <Button text=" Chaves" styleClass="nav-item" maxWidth="Infinity" fx:id="btnChaves" onAction="#navegar"/>
+                <Button text=" Usuários" styleClass="nav-item" maxWidth="Infinity" fx:id="btnUsuarios" onAction="#navegar"/>
+                <Button text=" Agendamentos" styleClass="nav-item" maxWidth="Infinity" fx:id="btnAgendamentos" onAction="#navegar"/>
+                <Button text=" Retirada" styleClass="nav-item" maxWidth="Infinity" fx:id="btnRetirar" onAction="#navegar"/>
             </VBox>
 
             <VBox styleClass="sidebar-footer">
                 <HBox alignment="CENTER_LEFT" spacing="10">
                     <StackPane styleClass="avatar">
-                        <Label text="IR" styleClass="avatar-text"/>
+                        <Label text="?" styleClass="avatar-text" fx:id="lblAvatar"/>
                     </StackPane>
-                    <VBox>
-                        <Label text="Irineu"         styleClass="user-name"/>
-                        <Label text="Administrador" styleClass="user-role"/>
+                    <VBox HBox.hgrow="ALWAYS">
+                        <Label fx:id="lblnameuser" text=""  styleClass="user-name"/>
+                        <Label fx:id="lbltipouser" text=""  styleClass="user-role"/>
                     </VBox>
                 </HBox>
+
+                <Button text="Sair" onAction="#sair"
+                        maxWidth="Infinity"
+                        styleClass="nav-item"
+                        style="-fx-text-fill: #E53E3E;"/>
             </VBox>
 
         </VBox>
     </left>
 
-    <!-- Área central: aqui as páginas são injetadas -->
     <center>
         <StackPane fx:id="contentArea"
                    alignment="TOP_LEFT"

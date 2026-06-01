@@ -25,13 +25,9 @@ public class RetiradaDao {
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ){
             stmt.setLong(1, usuarioId);
-
             stmt.setLong(2, chaveId);
-
             stmt.setString(3, LocalDateTime.now().toString());
-
             stmt.setString(4,"ATIVA");
-
             stmt.execute();
 
             new ChaveDao().alterarStatus(chaveId,"EM_USO");

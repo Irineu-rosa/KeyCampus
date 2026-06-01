@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.KeyCampus.controller.CriacaoSenhaController"
+      stylesheets="@/css/StyleAuth.css"
+      styleClass="root"
+      prefWidth="420" minWidth="420" maxWidth="420"
+      prefHeight="420" minHeight="420" maxHeight="420"
+      spacing="0">
+
+    <VBox styleClass="topbar">
+        <Label text="Primeiro acesso"       styleClass="page-title"/>
+        <Label text="Crie sua senha de acesso" styleClass="page-sub"/>
+    </VBox>
+
+    <VBox styleClass="content" VBox.vgrow="ALWAYS">
+        <VBox styleClass="card" spacing="16">
+
+            <VBox spacing="5">
+                <Label text="Nova senha" styleClass="form-label"/>
+                <PasswordField fx:id="pfNovaSenha"
+                               promptText="Mínimo 6 caracteres"
+                               styleClass="form-input"
+                               maxWidth="Infinity"/>
+            </VBox>
+
+            <VBox spacing="5">
+                <Label text="Confirmar senha" styleClass="form-label"/>
+                <PasswordField fx:id="pfConfirmar"
+                               promptText="Repita a senha"
+                               styleClass="form-input"
+                               maxWidth="Infinity"/>
+            </VBox>
+
+            <Region prefHeight="4"/>
+
+            <Button text="Salvar senha"
+                    onAction="#salvar"
+                    styleClass="btn-primary"
+                    maxWidth="Infinity"
+                    defaultButton="true"/>
+
+        </VBox>
+    </VBox>
+
+</VBox>

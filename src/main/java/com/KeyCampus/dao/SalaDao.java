@@ -6,6 +6,8 @@ import com.KeyCampus.model.StatusSala;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,14 +91,7 @@ public class SalaDao {
             var rs = stmt.executeQuery();
 
 
-            while(rs.next()){
-                Sala sala = new Sala();
-                sala.setId(rs.getLong("id"));
-                sala.setNome(rs.getString("nome"));
-                sala.setDescricao(rs.getString("descricao"));
-                sala.setStatus(StatusSala.valueOf(rs.getString("status")));
-                salas.add(sala);
-            }
+            while (rs.next()) salas.add(mapearSala(rs));
         }
         catch(Exception e){
             e.printStackTrace();
@@ -170,5 +165,31 @@ public class SalaDao {
         }
 
         return 0;
+    }
+
+    public List<Sala> listarParaLimpeza() {
+        String sql = "SELECT * FROM salas WHERE status != 'EM_LIMPEZA'";
+        List<Sala> lista = new ArrayList<>();
+        try (
+                Connection conn = ConnectionFactory.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
+            var rs = stmt.executeQuery();
+            while (rs.next()) {
+                lista.add(mapearSala(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
+    private Sala mapearSala(ResultSet rs) throws SQLException {
+        Sala sala = new Sala();
+        sala.setId(rs.getLong("id"));
+        sala.setNome(rs.getString("nome"));
+        sala.setDescricao(rs.getString("descricao"));
+        sala.setStatus(StatusSala.valueOf(rs.getString("status")));
+        return sala;
     }
 }

@@ -17,7 +17,9 @@ public class DatabaseInitializer {
                     nome TEXT NOT NULL,
                     matricula TEXT UNIQUE,
                     tipo TEXT NOT NULL,
-                    ativo INTEGER DEFAULT 1
+                    ativo INTEGER DEFAULT 1,
+                    senha_hash TEXT DEFAULT NULL,
+                    primeiro_acesso INTEGER DEFAULT 1
                     );""");
 
             stmt.execute("""
@@ -47,7 +49,8 @@ public class DatabaseInitializer {
                           sala_id INTEGER NOT NULL,
                           data TEXT NOT NULL,   
                           hora_inicio TEXT NOT NULL,   
-                          hora_fim TEXT NOT NULL,                             
+                          hora_fim TEXT NOT NULL,  
+                          status TEXT NULL,                           
                           FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
                           FOREIGN KEY (sala_id) REFERENCES salas(id)
                         );""");
