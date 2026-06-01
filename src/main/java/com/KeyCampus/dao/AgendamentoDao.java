@@ -115,6 +115,10 @@ public class AgendamentoDao {
         return executarLeitura(SQL_SELECT_AGENDAMENTOS + "WHERE a.usuario_id = ?", this::mapearAgendamento, id);
     }
 
+    public List<Agendamento> buscarPrimeiroIdUsuario(Long id){
+        return  executarLeitura(SQL_SELECT_AGENDAMENTOS + " ORDER BY CASE WHEN a.id = ? THEN 0 ELSE 1 END, a.id DESC;", this::mapearAgendamento, id);
+    }
+
     public int totalAgendamentosHoje() {
         String sql = "SELECT COUNT(*) total FROM agendamentos WHERE data = CURRENT_DATE";
         try (

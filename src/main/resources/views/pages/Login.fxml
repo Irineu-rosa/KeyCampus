@@ -12,8 +12,8 @@
       spacing="0">
 
     <VBox styleClass="topbar">
-        <Label text="KeyCampus"          styleClass="brand"/>
-        <Label text="Acesse sua conta"   styleClass="page-sub"/>
+        <Label text="KeyCampus" styleClass="brand"/>
+        <Label text="Acesse sua conta" styleClass="page-sub"/>
     </VBox>
 
     <VBox styleClass="content" VBox.vgrow="ALWAYS">
@@ -26,7 +26,7 @@
                            styleClass="form-input"
 
                            text=""
-                           
+
                            maxWidth="Infinity"/>
             </VBox>
 
